@@ -11,9 +11,9 @@ on:
 jobs:
   build:
 
-    run-on: ubuntu-lastet
+    runs-on: ubuntu-lastet
 
-    stratégy:
+    strategy:
       matrix:
         mode-version: [20.x]
     
