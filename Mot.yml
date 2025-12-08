@@ -1,0 +1,45 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: read           # Sécurité par défaut
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]    # Test sur Node 20 (LTS) et 22 (current)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0               # Utile pour certains outils (ex: semantic-release)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'                 # Cache automatique du node_modules
+          # ou cache: 'pnpm' / 'yarn' selon ton gestionnaire
+
+      - name: Install dependencies
+        run: npm ci                     # npm ci est plus rapide et plus fiable en CI
+
+      - name: Run linters & type checking
+        run: |
+          npm run lint
+          npm run type-check   # si tu as TypeScript
+
+      - name: Run tests
+        run: npm test -- --coverage
+
+      - name: Build (if needed)
+        run: npm run build           # seulement si tu as une étape de build (ex: Vite, Next.js, etc.)
