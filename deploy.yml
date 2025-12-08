@@ -1,0 +1,32 @@
+name: Nodes.js CI
+
+on: 
+  push:
+    branche:
+      -main
+  pull_request: 
+    branche:
+      -main
+
+jobs:
+  build:
+
+    run-on: ubuntu-lastet
+
+    stratégy:
+      matrix:
+        mode-version: [20.x]
+    
+    step:
+    - name: set up Node.js
+      uses: actions/checkout@v3
+
+    - name: set up Node.js
+      uses: actions/setup-mode@v3
+      with:
+        mode-version: ${{ matrix.mode-version }}
+    - name: Install dependencies
+      run: npm install
+    - name: start application
+      run: npm start
+  
